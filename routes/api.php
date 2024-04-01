@@ -8,7 +8,6 @@ use App\Models\User;
 use App\Response\CustomsResponse;
 use App\Var\ApiVersion;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
 
 
 Route::prefix(ApiVersion::V1)->group(function () {
@@ -61,8 +60,6 @@ Route::prefix(ApiVersion::V1)->group(function () {
         Route::resource('/category', CategoryController::class);
     });
 
-//    Route::fallback(function () {
-//        return response()->json(['message' => 'Unauthorized.'], 401);
-//    });
+
 });
 

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Response\CustomsResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -13,9 +15,17 @@ class FileController extends Controller
 {
     public function uploadImage(Request $request): JsonResponse
     {
-        $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg|max:5048', // Max 2MB
+        $validator = Validator::make($request->all(), [
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:5048',
         ]);
+
+        if ($validator->fails()) {
+            return CustomsResponse::error(
+                $validator->errors()->toArray(),
+                'The image field is required.',
+                422
+            );
+        }
 
         $image = $request->file('image');
         $imageName = $image->getClientOriginalName(); // Get original file name
@@ -23,7 +33,14 @@ class FileController extends Controller
         $slug = Str::slug(pathinfo($imageName, PATHINFO_FILENAME)); // Generate slug from filename
         $extension = $image->getClientOriginalExtension(); // Get original file extension
         $filename = $slug . '.' . $extension; // Generate filename using slug and original extension
-        $path = $image->storeAs('public/images', $filename); // Store file with generated filename
+        if (Storage::exists('public/images/' . $filename)) {
+            return response()->json([
+                "status" => 400,
+                'file_name' => $filename,
+                'message' => 'File with the same name already exists.',
+            ], 400);
+        }
+        $path = $image->storeAs('public/images/', $filename); // Store file with generated filename
 
         return response()->json([
             "status" => 201,
@@ -37,9 +54,19 @@ class FileController extends Controller
 
     public function uploadPDF(Request $request): JsonResponse
     {
-        $request->validate([
-            'pdf' => 'required|mimes:pdf|max:5048', // Max 2MB
+
+
+        $validator = Validator::make($request->all(), [
+            'pdf' => 'required|mimes:pdf|max:5048',
         ]);
+
+        if ($validator->fails()) {
+            return CustomsResponse::error(
+                $validator->errors()->toArray(),
+                'The pdf field is required.',
+                422
+            );
+        }
 
         $pdf = $request->file('pdf');
         $pdfName = $pdf->getClientOriginalName(); // Get original file name
@@ -66,11 +93,17 @@ class FileController extends Controller
 
     public function uploadPPT(Request $request): JsonResponse
     {
-        $request->validate([
-            'ppt' => 'required|mimes:ppt,pptx|max:5048', // Max 2MB
+        $validator = Validator::make($request->all(), [
+            'ppt' => 'required|mimes:ppt,pptx|max:5048',
         ]);
 
-
+        if ($validator->fails()) {
+            return CustomsResponse::error(
+                $validator->errors()->toArray(),
+                'The ppt field is required.',
+                422
+            );
+        }
 
         $ppt = $request->file('ppt');
         $pptName = $ppt->getClientOriginalName(); // Get original file name

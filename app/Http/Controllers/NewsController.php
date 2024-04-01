@@ -93,7 +93,7 @@ class NewsController extends Controller
                 'page' => $news->currentPage(), // Current page number
                 'size' => $news->perPage(), // Number of items per page
                 'total_pages' => $news->lastPage(), // Total number of pages
-                'total_data' => $news->total(), // Total number of data
+                'total_data' => News::count(), // Total number of data
             ];
 
             // Menambahkan informasi halaman selanjutnya

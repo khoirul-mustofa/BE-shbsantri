@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Response\CustomsResponse;
+use http\Env\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -40,16 +41,21 @@ class AuthController extends Controller
         $success['token'] =  $user->createToken('SHBSANTRI')->plainTextToken;
         $success['name'] =  $user->name;
 
-        return response()->json([
-            'status' => 200,
-            'message' => 'User register successfully.',
-            'data' => [
-                "name" => $success['name'],
-                "token" => $success['token'],
-                "email" => $user->email,
-                "avatar" => $user->avatar
-            ]
-        ]);
+        $data = [
+            "id" => $user->id,
+            "name" => $success['name'],
+            "token" => $success['token'],
+            "email" => $user->email,
+            "avatar" => $user->avatar,
+            "created_at" => $user->created_at,
+            "updated_at" => $user->updated_at
+        ];
+
+        return CustomsResponse::success(
+          $data,
+            'User register successfully.',
+            201
+        );
     }
 
     /**
@@ -59,6 +65,19 @@ class AuthController extends Controller
      */
     public function login(Request $request): JsonResponse
     {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if($validator->fails()){
+            return CustomsResponse::error(
+                $validator->errors(),
+                'Validation Error.',
+                400
+            );
+        }
+
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
             $user = Auth::user();
             $success['token'] =  $user->createToken('SHBSANTRI')->plainTextToken;
@@ -90,9 +109,10 @@ class AuthController extends Controller
 
         // Validate the request data
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            // Add more validation rules as needed
+            'name' => 'nullable|string|max:255',
+            'email' => 'nullable|string|email|max:255|unique:users,email,' . $user->id,
+            'password' => 'nullable|string|min:8',
+            'c_password' => 'nullable|string|same:password',
         ]);
 
         // Check if validation fails
@@ -126,11 +146,10 @@ class AuthController extends Controller
 
 
 
-        return CustomsResponse::success(
-            null,
-            'Successfully logged out.',
-            200
-        );
+        return response()->json([
+            'status' => 200,
+            'message' => 'User logout successfully.',
+        ]);
     }
 
     /**

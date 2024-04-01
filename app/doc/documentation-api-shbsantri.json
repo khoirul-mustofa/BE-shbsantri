@@ -1,0 +1,1391 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "shbsantri API",
+        "description": "Documentation for shbsantri API",
+        "contact": {
+            "name": "github",
+            "url": "https://github.com/khoirulmustofa21/BE-shbsantri"
+        }
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api/v1",
+            "description": "Local server"
+        },
+        {
+            "url": "https://shbsantri-server-laravel-11.fly.dev/api/v1",
+            "description": "Production server"
+        }
+    ],
+    "paths": {
+        "/auth/register": {
+            "description": "Register user",
+            "post": {
+                "tags": ["Auth"],
+                "operationId": "register",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            },
+                            "examples": {
+                                "example": {
+                                    "value": {
+                                        "name": "khoirul mustofa",
+                                        "email": "mustofa@example.com",
+                                        "password": "12345678",
+                                        "c_password": "12345678",
+                                        "avatar": "https://plus.unsplash.com/premium_photo-1687294573944-62f06d636d75?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fGNvbnRlbnR8ZW58MHx8MHx8fDA%3D"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 201,
+                                    "message": "User register successfully.",
+                                    "data": {
+                                        "id": 1,
+                                        "name": "khoirul mustofa",
+                                        "token": "1|cSgWwfmsyFrfWpwBMj4LEYpGosYcPNHEhIoFMYVha407a27b",
+                                        "email": "khoirulmustofa@gmail.com",
+                                        "avatar": "https://plus.unsplash.com/premium_photo-1687294573944-62f06d636d75?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fGNvbnRlbnR8ZW58MHx8MHx8fDA%3D",
+                                        "created_at": "2024-04-01T04:37:00.000000Z",
+                                        "updated_at": "2024-04-01T04:37:00.000000Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "err Validation": {
+                                        "value": {
+                                            "status": 400,
+                                            "message": "Validation Error.",
+                                            "errors": {
+                                                "name": [
+                                                    "The name field is required."
+                                                ],
+                                                "email": [
+                                                    "The email field is required."
+                                                ],
+                                                "password": [
+                                                    "The password field is required."
+                                                ],
+                                                "c_password": [
+                                                    "The c password field is required."
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "err already exists": {
+                                        "value": {
+                                            "status": 400,
+                                            "message": "Validation Error.",
+                                            "errors": {
+                                                "name": [
+                                                    "The name has already been taken."
+                                                ],
+                                                "email": [
+                                                    "The email has already been taken."
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "$ref": "#/components/responses/serverErrors"
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "description": "Login user",
+            "post": {
+                "tags": ["Auth"],
+                "operationId": "login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            },
+                            "examples": {
+                                "example": {
+                                    "value": {
+                                        "email": "mustofa@example.com",
+                                        "password": "12345678"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successfully",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 200,
+                                    "message": "User login successfully.",
+                                    "data": {
+                                        "name": "khoirul mustofa",
+                                        "token": "3|v9Mv9vdqus6lnK0pr7VsQOcQFznORFFeDMpZYCoF3e716610",
+                                        "email": "khoirulmustofa@gmail.com",
+                                        "avatar": "https://plus.unsplash.com/premium_photo-1687294573944-62f06d636d75?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fGNvbnRlbnR8ZW58MHx8MHx8fDA%3D"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 400,
+                                    "message": "Validation Error.",
+                                    "errors": {
+                                        "email": [
+                                            "The email field is required."
+                                        ],
+                                        "password": [
+                                            "The password field is required."
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "$ref": "#/components/responses/serverErrors"
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "description": "Logout user",
+            "post": {
+                "tags": ["Auth"],
+                "operationId": "logout",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 200,
+                                    "message": "User logout successfully."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Unauthorized"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "$ref": "#/components/responses/serverErrors"
+                    }
+                }
+            }
+        },
+        "/auth/update": {
+            "description": "Update user",
+            "put": {
+                "tags": ["Auth"],
+                "operationId": "update",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            },
+                            "examples": {
+                                "example": {
+                                    "value": {
+                                        "name": "mustofa update",
+                                        "email": "email@d.com",
+                                        "password": "12345678",
+                                        "c_password": "12345678"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successfully",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 200,
+                                    "message": "User profile updated successfully.",
+                                    "data": {
+                                        "id": 1,
+                                        "name": "mustofa update",
+                                        "email": "email@update.com",
+                                        "avatar": "https://plus.unsplash.com/premium_photo-1687294573944-62f06d636d75?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fGNvbnRlbnR8ZW58MHx8MHx8fDA%3D",
+                                        "email_verified_at": null,
+                                        "created_at": "2024-04-01T04:37:00.000000Z",
+                                        "updated_at": "2024-04-01T05:54:22.000000Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Unauthorized"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "$ref": "#/components/responses/serverErrors"
+                    }
+                }
+            }
+        },
+        "/news": {
+            "description": "Get all news",
+            "get": {
+                "tags": ["News"],
+                "operationId": "getNews",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "example": "shbsantri"
+                        }
+                    },
+                    {
+                        "name": "category_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 200,
+                                    "message": "Success",
+                                    "count": 2,
+                                    "data": [
+                                        {
+                                            "id": 2,
+                                            "title": "test titel 2",
+                                            "content": "test content 2",
+                                            "video": "https://youtu.be/swBOz96kr-s?si=UqsvQgx4pyARAPuH",
+                                            "category": {
+                                                "id": 1,
+                                                "name": "tambah kategory dari api"
+                                            },
+                                            "user": {
+                                                "id": 1,
+                                                "name": "mustofa update",
+                                                "avatar": "https://plus.unsplash.com/premium_photo-1687294573944-62f06d636d75?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fGNvbnRlbnR8ZW58MHx8MHx8fDA%3D"
+                                            },
+                                            "created_at": "2024-04-01T06:10:06.000000Z",
+                                            "updated_at": "2024-04-01T06:10:06.000000Z"
+                                        },
+                                        {
+                                            "id": 1,
+                                            "title": "test titel 1",
+                                            "content": "test content 1",
+                                            "video": "https://youtu.be/swBOz96kr-s?si=UqsvQgx4pyARAPuH",
+                                            "category": {
+                                                "id": 1,
+                                                "name": "tambah kategory dari api"
+                                            },
+                                            "user": {
+                                                "id": 1,
+                                                "name": "mustofa update",
+                                                "avatar": "https://plus.unsplash.com/premium_photo-1687294573944-62f06d636d75?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fGNvbnRlbnR8ZW58MHx8MHx8fDA%3D"
+                                            },
+                                            "created_at": "2024-04-01T06:04:26.000000Z",
+                                            "updated_at": "2024-04-01T06:04:26.000000Z"
+                                        }
+                                    ],
+                                    "page": 1,
+                                    "size": 10,
+                                    "total_pages": 1,
+                                    "total_data": 2
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "validate error",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 400,
+                                    "message": "Validation Error.",
+                                    "errors": {
+                                        "page": [
+                                            "The page field must be an integer.",
+                                            "The page field must be at least 1."
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "$ref": "#/components/responses/serverErrors"
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": ["News"],
+                "operationId": "createNews",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "title": "test titel 3",
+                                "content": "test content 3",
+                                "category_id": 1,
+                                "user_id": 1,
+                                "pdf": "http://127.0.0.1:8000/storage/pdfs/undangan-40-hari-dr-kaijisah.pdf",
+                                "ppt": "http://127.0.0.1:8000/storage/ppts/sesi-1-crisis-management.ppt",
+                                "image": "http://127.0.0.1:8000/storage/images/screenshot-2024-03-12-09-18-08.png",
+                                "video": "https://youtu.be/swBOz96kr-s?si=UqsvQgx4pyARAPuH"
+                            },
+                            "schema": {
+                                "$ref": "#/components/schemas/News"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "created",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 201,
+                                    "message": "News created successfully.",
+                                    "data": {
+                                        "title": "test titel 3",
+                                        "content": "test content 3",
+                                        "category_id": 1,
+                                        "user_id": 1,
+                                        "pdf": "http://127.0.0.1:8000/storage/pdfs/undangan-40-hari-dr-kaijisah.pdf",
+                                        "ppt": "http://127.0.0.1:8000/storage/ppts/sesi-1-crisis-management.ppt",
+                                        "image": "http://127.0.0.1:8000/storage/images/screenshot-2024-03-12-09-18-08.png",
+                                        "video": "https://youtu.be/swBOz96kr-s?si=UqsvQgx4pyARAPuH",
+                                        "updated_at": "2024-04-01T06:23:27.000000Z",
+                                        "created_at": "2024-04-01T06:23:27.000000Z",
+                                        "id": 3
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "validate error",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "already": {
+                                        "value": {
+                                            "status": 400,
+                                            "message": "Validation Error.",
+                                            "errors": {
+                                                "title": [
+                                                    "The title has already been taken."
+                                                ]
+                                            }
+                                        }
+                                    },
+
+                                    "validate": {
+                                        "value": {
+                                            "status": 400,
+                                            "message": "Validation Error.",
+                                            "errors": {
+                                                "title": [
+                                                    "The title field is required."
+                                                ],
+                                                "content": [
+                                                    "The content field is required."
+                                                ],
+                                                "category_id": [
+                                                    "The category id field is required."
+                                                ],
+                                                "user_id": [
+                                                    "The user id field is required."
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "$ref": "#/components/responses/serverErrors"
+                    }
+                }
+            }
+        },
+        "/news/{id}": {
+            "put": {
+                "description": "Update news",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": ["News"],
+                "operationId": "updateNews",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "title": "test titel 3",
+                                "content": "test content 3",
+                                "category_id": 1,
+                                "user_id": 1,
+                                "pdf": "http://127.0.0.1:8000/storage/pdfs/undangan-40-hari-dr-kaijisah.pdf",
+                                "ppt": "http://127.0.0.1:8000/storage/ppts/sesi-1-crisis-management.ppt",
+                                "image": "http://127.0.0.1:8000/storage/images/screenshot-2024-03-12-09-18-08.png",
+                                "video": "https://youtu.be/swBOz96kr-s?si=UqsvQgx4pyARAPuH"
+                            },
+                            "schema": {
+                                "$ref": "#/components/schemas/News"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "updated",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 200,
+                                    "message": "News updated successfully.",
+                                    "data": {
+                                        "id": 1,
+                                        "title": "test titel 1 update",
+                                        "content": "test content 1 update",
+                                        "image": "http://127.0.0.1:8000/storage/images/screenshot-2024-03-12-09-18-08.png",
+                                        "video": "https://youtu.be/swBOz96kr-s?si=UqsvQgx4pyARAPuH",
+                                        "pdf": "http://127.0.0.1:8000/storage/pdfs/undangan-40-hari-dr-kaijisah.pdf",
+                                        "ppt": "http://127.0.0.1:8000/storage/ppts/sesi-1-crisis-management.ppt",
+                                        "is_published": 0,
+                                        "category_id": 1,
+                                        "user_id": 1,
+                                        "created_at": "2024-04-01T06:04:26.000000Z",
+                                        "updated_at": "2024-04-01T07:39:50.000000Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "$ref": "#/components/responses/serverErrors"
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete news",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": ["News"],
+                "operationId": "deleteNews",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "deleted",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 200,
+                                    "message": "News deleted successfully.",
+                                    "data": null
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 404,
+                                    "message": "News not found.",
+                                    "errors": "No query results for model [App\\Models\\News] 100"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "$ref": "#/components/responses/serverErrors"
+                    }
+                }
+            }
+        },
+        "/category": {
+            "get": {
+                "description": "Get all category",
+                "tags": ["Category"],
+                "operationId": "getAllCategory",
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 200,
+                                    "message": "Categories retrieved successfully.",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "name": "tambah kategory dari api",
+                                            "created_at": "2024-04-01T06:04:57.000000Z",
+                                            "updated_at": "2024-04-01T06:04:57.000000Z"
+                                        },
+                                        {
+                                            "id": 2,
+                                            "name": "ngaji",
+                                            "created_at": "2024-04-01T07:49:56.000000Z",
+                                            "updated_at": "2024-04-01T07:49:56.000000Z"
+                                        },
+                                        {
+                                            "id": 3,
+                                            "name": "bersama",
+                                            "created_at": "2024-04-01T07:50:03.000000Z",
+                                            "updated_at": "2024-04-01T07:50:03.000000Z"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "$ref": "#/components/responses/serverErrors"
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create category",
+                "tags": ["Category"],
+                "operationId": "createCategory",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "name": "ngaji minggu"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "created",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 201,
+                                    "message": "Category created successfully.",
+                                    "data": {
+                                        "id": 4,
+                                        "name": "tambah kategory dari api",
+                                        "created_at": "2024-04-01T06:04:57.000000Z",
+                                        "updated_at": "2024-04-01T06:04:57.000000Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "bad request",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "Validation Error.": {
+                                        "summary": "Validation Error.",
+                                        "value": {
+                                            "status": 400,
+                                            "message": "Validation Error.",
+                                            "errors": {
+                                                "name": [
+                                                    "The name field is required."
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "The name has already been taken.": {
+                                        "summary": "The name has already been taken.",
+                                        "value": {
+                                            "status": 400,
+                                            "message": "Validation Error.",
+                                            "errors": {
+                                                "name": [
+                                                    "The name has already been taken."
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Unauthenticated."
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "$ref": "#/components/responses/serverErrors"
+                    }
+                }
+            }
+        },
+        "/category/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update category",
+                "tags": ["Category"],
+                "operationId": "updateCategory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "name": "ngaji minggu"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 200,
+                                    "message": "Category updated successfully.",
+                                    "data": {
+                                        "id": 1,
+                                        "name": "kategory di update",
+                                        "created_at": "2024-04-01T06:04:57.000000Z",
+                                        "updated_at": "2024-04-01T08:01:14.000000Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Unauthenticated."
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "bad request",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 400,
+                                    "message": "Validation error.",
+                                    "errors": {
+                                        "name": ["The name field is required."]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 404,
+                                    "message": "Category not found.",
+                                    "errors": null
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "$ref": "#/components/responses/serverErrors"
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Delete category",
+                "tags": ["Category"],
+                "operationId": "deleteCategory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 200,
+                                    "message": "Category deleted successfully.",
+                                    "data": null
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Unauthenticated."
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 404,
+                                    "message": "Category not found.",
+                                    "errors": null
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "$ref": "#/components/responses/serverErrors"
+                    }
+                }
+            }
+        },
+        "/upload/image": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Upload image",
+                "tags": ["File"],
+                "operationId": "uploadImage",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "image": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 201,
+                                    "message": "Image uploaded successfully.",
+                                    "path": "http://localhost:8000/storage/images//screenshot-2024-03-12-09-17-33.png",
+                                    "size_file": "259.65 KB",
+                                    "file_name": "screenshot-2024-03-12-09-17-33.png"
+                                  }
+                            }
+                        }
+                    },
+                    "422":{
+                        "description": "unprocessable entity",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 422,
+                                    "message": "The image field is required.",
+                                    "errors": {
+                                        "image": [
+                                            "The image field is required."
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400":{
+                        "description": "bad request",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 400,
+                                    "file_name": "screenshot-2024-03-12-20-34-29.png",
+                                    "message": "File with the same name already exists."
+                                  }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Unauthenticated."
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "$ref": "#/components/responses/serverErrors"
+                    }
+                }
+
+            }
+        },
+        "/upload/pdf":{
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Upload pdf",
+                "tags": ["File"],
+                "operationId": "uploadPdf",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "pdf": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "example":{
+                                    "status": 201,
+                                    "message": "PDF uploaded successfully.",
+                                    "path": "http://127.0.0.1:8000/storage/pdfs/cover-shbtsantri.pdf",
+                                    "size_file": "254.27 KB",
+                                    "file_name": "cover-shbtsantri.pdf"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Unauthenticated."
+                                }
+                            }
+                        }
+                    },
+                    "400":{
+                        "description": "bad request",
+                        "content": {
+                            "application/json": {
+                                "example":{
+                                    "status": 400,
+                                    "file_name": "undangan-40-hari-dr-kaijisah.pdf",
+                                    "message": "File with the same name already exists."
+                                }
+                            }
+                        }
+                    },
+                    "422":{
+                        "description": "unprocessable entity",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 422,
+                                    "message": "The pdf field is required.",
+                                    "errors": {
+                                        "pdf": [
+                                            "The pdf field is required."
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "$ref": "#/components/responses/serverErrors"
+                    }
+                }
+
+            }
+        },
+        "/upload/ppt":{
+            "post":{
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Upload ppt",
+                "tags": ["File"],
+                "operationId": "uploadPpt",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "ppt": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 201,
+                                    "message": "PPT uploaded successfully.",
+                                    "path": "http://127.0.0.1:8000/storage/ppts/cover-shbtsantri.ppt",
+                                    "size_file": "254.27 KB",
+                                    "file_name": "cover-shbtsantri.ppt"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Unauthenticated."
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "bad request",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 400,
+                                    "file_name": "cover-shbtsantri.ppt",
+                                    "message": "File with the same name already exists."
+                                }
+                            }
+                        }
+                    },
+                    "422":{
+                        "description": "unprocessable entity",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 422,
+                                    "message": "The ppt field is required.",
+                                    "errors": {
+                                        "ppt": [
+                                            "The ppt field is required."
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "$ref": "#/components/responses/serverErrors"
+                    }
+                }
+
+            }
+        },
+        "/download/pdf/{filename}":{
+            "get":{
+
+                "description": "Download pdf",
+                "tags": ["File"],
+                "operationId": "downloadPdf",
+                "parameters": [
+                    {
+                        "name": "filename",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 200,
+                                    "message": "PDF downloaded successfully.",
+                                    "path": "http://127.0.0.1:8000/storage/pdfs/cover-shbtsantri.pdf"
+                                }
+                            }
+                        }
+                    },
+
+                    "500": {
+                        "description": "server error",
+                        "$ref": "#/components/responses/serverErrors"
+                    }
+                }
+
+            }
+        },
+        "/download/ppt/{filename}":{
+            "get":{
+                "description": "Download ppt",
+                "tags": ["File"],
+                "operationId": "downloadPpt",
+                "parameters": [
+                    {
+                        "name": "filename",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 200,
+                                    "message": "PPT downloaded successfully.",
+                                    "path": "http://127.0.0.1:8000/storage/ppts/cover-shbtsantri.ppt"
+                                }
+                            }
+                        }
+                    },
+
+                    "500": {
+                        "description": "server error",
+                        "$ref": "#/components/responses/serverErrors"
+                    }
+                }
+
+            }
+        },
+        "/download/image/{filename}":{
+            "get":{
+                "description": "Download image",
+                "tags": ["File"],
+                "operationId": "downloadImage",
+                "parameters": [
+                    {
+                        "name": "filename",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": 200,
+                                    "message": "Image downloaded successfully.",
+                                    "path": "http://127.0.0.1:8000/storage/images/cover-shbtsantri.png"
+                                }
+                            }
+                        }
+                    },
+
+                    "500": {
+                        "description": "server error",
+                        "$ref": "#/components/responses/serverErrors"
+                    }
+                }
+
+            }
+        }
+
+    },
+    "components": {
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
+        "responses": {
+            "serverErrors": {
+                "description": "Server Errors",
+
+                "content": {
+                    "application/json": {
+                        "example": {
+                            "status": 500,
+                            "message": "Server Error",
+                            "errors": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "schemas": {
+            "User": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "avatar": {
+                        "type": "string"
+                    }
+                }
+            },
+            "News": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "image": {
+                        "type": "string"
+                    },
+                    "category_id": {
+                        "type": "integer"
+                    },
+                    "user_id": {
+                        "type": "integer"
+                    },
+                    "pdf": {
+                        "type": "string"
+                    },
+                    "ppt": {
+                        "type": "string"
+                    },
+                    "video": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Categories": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}

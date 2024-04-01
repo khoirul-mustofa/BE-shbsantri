@@ -132,4 +132,29 @@ class AuthController extends Controller
             200
         );
     }
+
+    /**
+     * Remove the specified user from storage.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy(int $id) : JsonResponse
+    {
+        try {
+            // Cari pengguna berdasarkan ID
+            $user = User::findOrFail($id);
+
+            // Hapus pengguna
+            $user->delete();
+
+            return CustomsResponse::success( 'User deleted successfully.', 200);
+        } catch (\Exception $e) {
+            return CustomsResponse::error(
+                $e->getMessage(),
+                'Failed to delete user.',
+                500,
+            );
+        }
+    }
 }

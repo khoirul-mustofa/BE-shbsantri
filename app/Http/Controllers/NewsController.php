@@ -15,99 +15,100 @@ class NewsController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        // Validate the request data
-        $validator = Validator::make($request->all(), [
-            'size' => 'integer|min:1', // Number of items per page
-            'page' => 'integer|min:1', // Current page number
-            'search' => 'string', // Search query
-            'category_id' => 'integer', // Category ID for filtering
-            'user_id' => 'integer', // User ID for filtering
-        ]);
+            // Validate the request data
+            $validator = Validator::make($request->all(), [
+                'size' => 'integer|min:1', // Number of items per page
+                'page' => 'integer|min:1', // Current page number
+                'search' => 'string', // Search query
+                'category_id' => 'integer', // Category ID for filtering
+                'user_id' => 'integer', // User ID for filtering
+            ]);
 
-        // Check if validation fails
-        if ($validator->fails()) {
-            return CustomsResponse::error(
-                $validator->errors(),
-                'Validation Error.'
-            );
-        }
+            // Check if validation fails
+            if ($validator->fails()) {
+                return CustomsResponse::error(
+                    $validator->errors(),
+                    'Validation Error.'
+                );
+            }
 
-        // Retrieve pagination parameters from the request
-        $perPage = $request->query('size', 10); // Default: 10 items per page
-        $page = $request->query('page', 1); // Default: first page
-        $search = $request->query('search');
-        $categoryId = $request->query('category_id');
-        $userId = $request->query('user_id');
+            // Retrieve pagination parameters from the request
+            $perPage = $request->query('size', 10); // Default: 10 items per page
+            $page = $request->query('page', 1); // Default: first page
+            $search = $request->query('search');
+            $categoryId = $request->query('category_id');
+            $userId = $request->query('user_id');
 
-        // Retrieve news query with related category and user
-        $query = News::latest()->with('category', 'user');
+            // Retrieve news query with related category and user
+            $query = News::latest()->with('category', 'user');
 
-        // Apply search filter if search query is provided
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%$search%")
-                    ->orWhere('content', 'like', "%$search%");
+            // Apply search filter if search query is provided
+            if ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('title', 'like', "%$search%")
+                        ->orWhere('content', 'like', "%$search%");
+                });
+            }
+
+            // Apply category filter if category ID is provided
+            if ($categoryId) {
+                $query->where('category_id', $categoryId);
+            }
+
+            // Apply user filter if user ID is provided
+            if ($userId) {
+                $query->where('user_id', $userId);
+            }
+
+            // Paginate the news
+            $news = $query->paginate($perPage, ['*'], 'page', $page);
+
+            // Transform news data to match the desired structure
+            $transformedNews = $news->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'title' => $item->title,
+                    'content' => $item->content,
+                    'video' => $item->video,
+                    'category' => [
+                        'id' => $item->category->id,
+                        'name' => $item->category->name,
+                    ],
+                    'user' => [
+                        'id' => $item->user->id,
+                        'name' => $item->user->name,
+                        'avatar' => $item->user->avatar, // Fix this attribute name to 'avatar'
+                    ],
+                    'created_at' => $item->created_at,
+                    'updated_at' => $item->updated_at,
+                ];
             });
-        }
 
-        // Apply category filter if category ID is provided
-        if ($categoryId) {
-            $query->where('category_id', $categoryId);
-        }
-
-        // Apply user filter if user ID is provided
-        if ($userId) {
-            $query->where('user_id', $userId);
-        }
-
-        // Paginate the news
-        $news = $query->paginate($perPage, ['*'], 'page', $page);
-
-        // Transform news data to match the desired structure
-        $transformedNews = $news->map(function ($item) {
-            return [
-                'id' => $item->id,
-                'title' => $item->title,
-                'content' => $item->content,
-                'video' => $item->video,
-                'category' => [
-                    'id' => $item->category->id,
-                    'name' => $item->category->name,
-                ],
-                'user' => [
-                    'id' => $item->user->id,
-                    'name' => $item->user->name,
-                    'avatar' => $item->user->avatar, // Fix this attribute name to 'avatar'
-                ],
-                'created_at' => $item->created_at,
-                'updated_at' => $item->updated_at,
+            // Construct the response
+            $response = [
+                'status' => 200,
+                'message' => 'Success',
+                'count' => $transformedNews->count(),
+                'data' => $transformedNews,
+                'page' => $news->currentPage(), // Current page number
+                'size' => $news->perPage(), // Number of items per page
+                'total_pages' => $news->lastPage(), // Total number of pages
+                'total_data' => $news->total(), // Total number of data
             ];
-        });
 
-        // Construct the response
-        $response = [
-            'status' => 200,
-            'message' => 'Success',
-            'count' => $transformedNews->count(),
-            'data' => $transformedNews,
-            'page' => $news->currentPage(), // Current page number
-            'size' => $news->perPage(), // Number of items per page
-            'total_pages' => $news->lastPage(), // Total number of pages
-            'total_data' => $news->total(), // Total number of data
-        ];
+            // Menambahkan informasi halaman selanjutnya
+            if ($news->hasMorePages()) {
+                $response['next_page'] = $news->currentPage() + 1;
+            }
 
-        // Menambahkan informasi halaman selanjutnya
-        if ($news->hasMorePages()) {
-            $response['next_page'] = $news->currentPage() + 1;
-        }
+            // Menambahkan informasi halaman sebelumnya
+            if ($news->currentPage() > 1) {
+                $response['previous_page'] = $news->currentPage() - 1;
+            }
 
-        // Menambahkan informasi halaman sebelumnya
-        if ($news->currentPage() > 1) {
-            $response['previous_page'] = $news->currentPage() - 1;
-        }
+            // Return JSON response
+            return response()->json($response);
 
-        // Return JSON response
-        return response()->json($response);
     }
 
 
@@ -122,6 +123,7 @@ class NewsController extends Controller
             'video' => 'nullable|string',
             'image' => 'nullable|string',
             'pdf' => 'nullable|string',
+            'ppt' => 'nullable|string',
             'category_id' => 'required|integer',
             'user_id' => 'required|integer',
         ]);
@@ -213,6 +215,7 @@ class NewsController extends Controller
 
             // Beri respons sukses jika berhasil menghapus
             return CustomsResponse::success(
+                null,
                 'News deleted successfully.',
                 200
             );

@@ -15,6 +15,7 @@ class News extends Model
         'image',
         'video',
         'pdf',
+        'ppt',
         'is_published',
         'category_id',
         'user_id',

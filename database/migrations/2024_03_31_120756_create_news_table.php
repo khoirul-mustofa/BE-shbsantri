@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('image')->nullable();
             $table->text('video')->nullable();
             $table->string('pdf')->nullable();
+            $table->string('ppt')->nullable();
             $table->boolean('is_published')->default(false);
             $table->unsignedBigInteger('category_id')->references('id')->on('categories');
             $table->unsignedBigInteger('user_id')->references('id')->on('users');

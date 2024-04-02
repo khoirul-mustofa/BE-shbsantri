@@ -112,7 +112,9 @@ class AuthController extends Controller
             'name' => 'nullable|string|max:255',
             'email' => 'nullable|string|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:8',
+            'avatar' => 'nullable|string',
             'c_password' => 'nullable|string|same:password',
+            'is_subscribe' => 'nullable|boolean',
         ]);
 
         // Check if validation fails

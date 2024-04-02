@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+
 class NewsController extends Controller
 {
     /**
@@ -137,11 +139,19 @@ class NewsController extends Controller
             );
         }
 
-        // Buat instance baru dari model News dan langsung simpan ke dalam penyimpanan
-        $news = News::create($request->all());
+        // Buat instance baru dari model News
+        $newsData = $request->all();
+
+        // Generate slug dari judul
+        $slug = Str::slug($newsData['title']);
+
+        // Tambahkan slug ke dalam data yang akan disimpan
+        $newsData['slug'] = $slug;
+
+        // Simpan data
+        $news = News::create($newsData);
 
         // Berikan respons bahwa data berhasil disimpan
-
         return CustomsResponse::success(
             $news,
             'News created successfully.',
@@ -192,8 +202,17 @@ class NewsController extends Controller
             );
         }
 
+        // Ambil data yang dikirimkan dalam request
+        $newsData = $request->all();
+
+        // Jika ada perubahan pada judul, update juga slug
+        if(isset($newsData['title'])) {
+            $slug = Str::slug($newsData['title']);
+            $newsData['slug'] = $slug;
+        }
+
         // Update the news with the new data
-        $news->update($request->all());
+        $news->update($newsData);
 
         // Return success response
         return CustomsResponse::success(
